@@ -1,52 +1,55 @@
 package main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
-public class Window extends JFrame implements ActionListener{
-
-	int rows = new Main().rows;
-	int cols = new Main().cols;
-	
-	int width = 600;
-	int hieght = 600; 
-	
-	GridLayout grid = new GridLayout(rows, cols);
-	JMenuBar menuBar = new JMenuBar();
-	JMenu menu = new JMenu();
-	JPanel mainPanel = new JPanel();
-	JMenuItem menuItem = new JMenuItem();
-	
+public class Window extends JFrame implements ActionListener  {
+		int cols = Main.cols;
+		int rows = Main.rows;
+		JMenu mode = new JMenu();
+		JMenuItem saveFile = new JMenuItem();
+		JMenuBar myMenuBar = new JMenuBar();
+		JPanel mainPanel = new JPanel();
+		GridLayout grid = new GridLayout(cols, rows, 1, 1);
+		
 	public Window(){
-		this.setSize(new Dimension(width,hieght));
-		setMenuBar();
-		this.mainPanel.setBackground(Color.BLACK);
+		this.setSize(500, 500);
+		this.setTitle("Path Finder");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setBackground(Color.black);
+		
+		this.setJMenuBar(this.myMenuBar);
+		this.myMenuBar.setPreferredSize(new Dimension(myMenuBar.getPreferredSize().width, 30));
+		
+		this.myMenuBar.add(this.mode);
+		this.mode.setText("Mode");
+		this.mode.setPreferredSize(new Dimension(40, mode.getPreferredSize().height));
+		this.mode.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		float HSB[] = new float[3]; 
+		Color.RGBtoHSB(0,120,73, HSB);
+		this.myMenuBar.setBackground(Color.getHSBColor(HSB[0], HSB[1], HSB[2]));
+		
+		Color.RGBtoHSB(3,117,180, HSB);
+		this.saveFile.setBackground(Color.getHSBColor(HSB[0], HSB[1], HSB[2]));
+		this.saveFile.setBorder(BorderFactory.createLineBorder(Color.getHSBColor(HSB[0], HSB[1], HSB[2])));
+		this.saveFile.setText("Item");
+		this.saveFile.addActionListener(this);
+		this.mode.add(saveFile);
+		
 		this.mainPanel.setLayout(grid);
+		this.mainPanel.setBackground(Color.black);
 		this.add(mainPanel);
-		this.setResizable(false);
-	}
-	
-	
-	private void setMenuBar(){
-		this.setJMenuBar(menuBar);
-		this.menu.setText("Menu");
-		this.menuBar.add(menu);
-		this.menuItem.setText("Item");
-		this.menu.add(menuItem);	
-	}
+		}
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
+
+
 
 }
