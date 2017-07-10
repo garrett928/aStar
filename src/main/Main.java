@@ -8,30 +8,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-	static int cols = 50;
-	static int rows = 50;
+	static int cols = 70;
+	static int rows = 70;
 	static Window window = new Window();
 	static AStar aStar = new AStar(window, window.mainPanel);
-	
-	
-
-	
-	
-	//java main, used to call just methods 
-	public static void main(String[] args) {
-		//open window
-		window.setVisible(true);
-		//setup everything a* needs
+	static boolean refresh = true;
+	static Node lastClickedNode = AStar.nodes[0][0];
+	public static void runAStar(){
+		//setup everything a* needs		
 		aStar.init();
-		
 		//update window
 		window.pack();
 		
 		//run loop that finds the path
 		aStar.aStarLoop();
 		
-		//update window
-		window.pack();
+		window.pack();		
 	}
-
-} 
+	
+	
+	public static void deInit(){
+		aStar.deInit();
+	}
+	
+	//java main, used to call just methods 
+	public static void main(String[] args) {
+		//open window
+		window.setVisible(true);
+		runAStar();
+	} 
+}

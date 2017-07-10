@@ -14,38 +14,47 @@ public class AStar {
 	int cols = Main.cols;
 	int rows = Main.rows;
 	static Node[][] nodes= new Node[Main.cols][Main.rows];
+	boolean running = false;
 	List<Node> openSet = new ArrayList<>();
 	List<Node> closedSet = new ArrayList<>();
 	List<Node> path = new ArrayList<>();
 	List<Node> neighbors = new ArrayList<>();
-	Node start = null;
-	Node end = null;
-	Node current = null;
+	Node start;
+	Node end;
+	Node current;
 	
 	//set where A* runs when initiated 
 	public AStar(JFrame frame, JPanel panel){
 		this.runWindow = frame;
 		this.runPanel = panel;
 	}
-	 
+	
+	
 	 //setup A*
 	 public void init(){
+		 running = true;
 		 int cols = this.cols;
 		 int rows = this.rows;
-		 openSet.add(start);
+		 current =  null;
+		 openSet.clear();
+		 closedSet.clear();
+		 path.clear();
+		 neighbors.clear();
 		 
-			//init nodes 
 			for(int i=0; i < cols; i++){
 				for(int j = 0; j < rows; j++){
 					nodes[i][j] = new Node(runPanel, i, j); 
 				}
 			}
+		
 			//add neighbor nodes 
 			for(int i=0; i < cols; i++){
 				for(int j = 0; j < rows; j++){
 					nodes[i][j].addNeighbors();
 				}
 			}
+			
+		
 			
 			//declare start and end after cells have been made
 			start = nodes[0][0];
@@ -59,6 +68,9 @@ public class AStar {
 					nodes[i][j].makeWall(); 
 				}
 			}
+			//add start as the first available node to traverse from 
+			 openSet.add(start);
+
 
 	 }
 	 
@@ -83,38 +95,51 @@ public class AStar {
 			  }
 			}
 		
+		
+		public void deInit(){
+			if (!running){
+				for(int i=0; i < cols; i++){
+					for(int j = 0; j < rows; j++){
+						nodes[i][j].runPanel.remove(nodes[i][j]);
+						nodes[i][j] = null;
+					}
+				}
+			}
+		}
+		
+		
+		
+		//main loop
 		public void aStarLoop(){
 			while(true){
 			  // Am I still searching?
-			  if (openSet.size() > 0) {
-
+			  if (!openSet.isEmpty()) {
 			    // Best next option
 			    int winner = 0;
 			    for (int i = 0; i < openSet.size() - 1; i++) {
-			      if (openSet.get(i).f < openSet.get(winner).f) {
+			      if (openSet.get(i).f <= openSet.get(winner).f) {
 			        winner = i;
 			      }
 			    }
-			    System.out.println("1");
+			    
 			    current = openSet.get(winner);
+			    
 
 			    // Did I finish?
 			    if (current == end) {
 				    System.out.println("Goal reached");
 			    	break;
 			    }
-			    System.out.println("2");
 
 			    // Best option moves from openSet to closedSet
 			    removeFromArray(openSet, current);
 			    closedSet.add(current);
-
+			    
 			    // Check all the neighbors
 			    current.getNodes(current.neighbors);
 			    neighbors = current.neighbors;
 			    for (int i = 0; i < neighbors.size() - 1; i++) {
 			      Node neighbor = neighbors.get(i);
-				    System.out.println("3");
 
 			      // Valid next spot?
 			      if (!closedSet.contains(neighbor) && !neighbor.wall) {
@@ -127,7 +152,6 @@ public class AStar {
 			            neighbor.g = tempG;
 			            newPath = true;
 			          }
-					    System.out.println("4");
 
 			        } else {
 			          neighbor.g = tempG;
@@ -144,7 +168,6 @@ public class AStar {
 			      }
 
 			    }
-			    System.out.println("5");
 
 			  // Uh oh, no solution
 			  } else {
@@ -158,7 +181,6 @@ public class AStar {
 					Color.RGBtoHSB(38,34,40, HSB);
 					closedSet.get(i).setBackground(Color.RED);			 
 			  }
-			    System.out.println("6");
 
 			  //draw nodes that can be explored
 			  for (int i = 0; i < openSet.size() - 1; i++) {
@@ -166,10 +188,9 @@ public class AStar {
 					openSet.get(i).setBackground(Color.getHSBColor(HSB[0], HSB[1], HSB[2]));			
 			  }
 			  
-			  }
-
-		    System.out.println("7");
-
+			
+			  }	 
+			
 			  // Find the path by working backwards
 			  List<Node> path = new ArrayList<>();
 			  Node temp = current;
@@ -178,13 +199,15 @@ public class AStar {
 			    path.add(temp.previousNode);
 			    temp = temp.previousNode;
 			  }
-			    System.out.println("8");
+			  path.add(start);
 
 			  for(int i = 0; i < path.size() - 1; i++){
 				  Color.RGBtoHSB(38,34,40, HSB);
 				  path.get(i).setBackground(Color.getHSBColor(HSB[0], HSB[1], HSB[2]));		
 			  }
 			  this.runWindow.pack();
+			  
+			  running = false;
 			}
 		}
 

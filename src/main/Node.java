@@ -2,6 +2,8 @@ package main;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Node extends JPanel{
+public class Node extends JPanel implements MouseListener{
 	
 	int cols = Main.cols;
 	int rows = Main.rows;
@@ -23,9 +25,11 @@ public class Node extends JPanel{
 	double h = 0;
 	int i;
 	int j;
+	JPanel runPanel;
 	
 	//setup node
 	public Node(JPanel panel, int i, int j){
+		this.runPanel = panel;
 		this.i = i;
 		this.j = j;
 		float HSB[] = new float[3]; 
@@ -33,15 +37,16 @@ public class Node extends JPanel{
 		this.setBackground(Color.getHSBColor(HSB[0], HSB[1], HSB[2]));
 				
 		//decide if this is a wall
-		if (Math.random() < .4){
-			this.wall = true;
-		}
-		panel.add(this);
+		this.runPanel.add(this);
 	}
 	
 	
 	//decide if the node is a wall 
 	public void makeWall(){
+		this.wall = false;
+		if(Math.random() <0.2){
+			this.wall = true; 
+		}
 		if (this.wall == true){
 			Color.RGBtoHSB(3,117,180, HSB);
 			this.setBackground(Color.getHSBColor(HSB[0], HSB[1], HSB[2]));
@@ -80,6 +85,8 @@ public class Node extends JPanel{
 	}
 
 	
+		
+	
 	//print the nodes from a list 
 	public String getNodes(List<Node> arr){
 		String neighborNodes = "";
@@ -91,5 +98,40 @@ public class Node extends JPanel{
 
 		}
 		return neighborNodes;
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		Main.lastClickedNode = this;
+		
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
