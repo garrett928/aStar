@@ -103,7 +103,8 @@ public class Node extends JPanel implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		Main.lastClickedNode = this;
+		Window.lastI = this.i;
+		Window.lastJ = this.j;
 		
 	}
 

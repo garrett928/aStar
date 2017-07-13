@@ -13,7 +13,7 @@ public class Main {
 	static Window window = new Window();
 	static AStar aStar = new AStar(window, window.mainPanel);
 	static boolean refresh = true;
-	static Node lastClickedNode = AStar.nodes[0][0];
+	static Node lastClickedNode = AStar.nodes[5][5];
 	public static void runAStar(){
 		//setup everything a* needs		
 		aStar.init();

@@ -3,6 +3,7 @@ package main;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,9 +20,10 @@ public class AStar {
 	List<Node> closedSet = new ArrayList<>();
 	List<Node> path = new ArrayList<>();
 	List<Node> neighbors = new ArrayList<>();
-	Node start;
-	Node end;
+	Node start = null;
+	Node end = null;
 	Node current;
+	Random rand = new Random();
 	
 	//set where A* runs when initiated 
 	public AStar(JFrame frame, JPanel panel){
@@ -29,6 +31,8 @@ public class AStar {
 		this.runPanel = panel;
 	}
 	
+	
+
 	
 	 //setup A*
 	 public void init(){
@@ -41,11 +45,13 @@ public class AStar {
 		 path.clear();
 		 neighbors.clear();
 		 
+		 	//init all nodes
 			for(int i=0; i < cols; i++){
 				for(int j = 0; j < rows; j++){
 					nodes[i][j] = new Node(runPanel, i, j); 
 				}
 			}
+			
 		
 			//add neighbor nodes 
 			for(int i=0; i < cols; i++){
@@ -54,26 +60,48 @@ public class AStar {
 				}
 			}
 			
-		
 			
-			//declare start and end after cells have been made
-			start = nodes[0][0];
-			end = nodes[cols - 1][rows - 1];
+			//check is A* has a start node
+			if(start == null){
+				int ranI = rand.nextInt(cols);
+				int ranJ = rand.nextInt(rows);
+				start = nodes[ranI][ranJ];
+			}
+			
+			
+			//check if A* has an end node
+			if(end == null){
+				int ranI = rand.nextInt(cols);
+				int ranJ = rand.nextInt(rows);
+				end = nodes[ranI][ranJ];
+			}
+			
+			
 			//make start and end not walls 
 			start.wall = false;
 			end.wall = false;
 			
+			
+			//make all the walls colored 
 			for(int i=0; i < cols; i++){
 				for(int j = 0; j < rows; j++){
 					nodes[i][j].makeWall(); 
 				}
 			}
+			
 			//add start as the first available node to traverse from 
 			 openSet.add(start);
-
-
 	 }
 	 
+	 
+	 //manually set a start node
+	 public void setStartNode(Node startNode){
+		 start = startNode;
+	 }
+	 
+	 
+	 //finds the distance from one node to another node
+	 //NEEDS IMPROVED!!!
 	 public double heuristic(Node a, Node b){
 		 double dis;
 		 if(b.i + 1 == a.i || b.i - 1 == a.i || b.j + 1 == a.j || b.j - 1 == a.j){
@@ -87,7 +115,6 @@ public class AStar {
 	 
 	//remove an element from any arrayList
 		public void removeFromArray(List<Node> arr, Node elt) {
-			  // Could use indexOf here instead to be more efficient
 			  for (int i = arr.size() - 1; i >= 0; i--) {
 			    if (arr.get(i) == elt) {
 			    	 arr.remove(i);
@@ -96,6 +123,8 @@ public class AStar {
 			}
 		
 		
+		
+		//Deinitializes all the nodes so they can later be recreated 
 		public void deInit(){
 			if (!running){
 				for(int i=0; i < cols; i++){
@@ -109,7 +138,7 @@ public class AStar {
 		
 		
 		
-		//main loop
+		//loop that runs A*
 		public void aStarLoop(){
 			while(true){
 			  // Am I still searching?
